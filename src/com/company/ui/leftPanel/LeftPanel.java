@@ -3,6 +3,7 @@ package com.company.ui.leftPanel;
 
 import com.company.Main;
 import com.company.data.CompnentNames;
+import com.company.exceptions.WrongFileFormatException;
 import com.company.model.InvoiceModel;
 import com.company.ui.MainFrame;
 import com.company.ui.rightPanel.RightPanel;
@@ -29,10 +30,11 @@ public class LeftPanel extends JComponent implements ActionListener {
     private JLabel invoiceLabel;
     private  List<InvoiceModel> invoiceData;
 
+    public static String currentPath ="";
     RightPanel rightPanel;
-    public LeftPanel( RightPanel rightPanel){
+    public LeftPanel( RightPanel rightPanel , String path){
         /*invoiceTable = new JTable(data , cols);*/
-
+        currentPath = path ;
         this.rightPanel = rightPanel;
         //Methods on Initiating
         getInvoiceData();
@@ -143,11 +145,14 @@ public class LeftPanel extends JComponent implements ActionListener {
     }
 
     void getInvoiceData(){
-        String file = "InvoiceHeader.csv";
-        Path path = Paths.get("src/com/company/data/",file);
+        /*String file = "InvoiceHeader.csv";
+        Path path = Paths.get("src/com/company/data/",file);*/
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream(String.valueOf(path));
+            if(!currentPath.split("\\.")[1].equals("csv")){
+                throw new WrongFileFormatException();
+            }
+            fis = new FileInputStream(String.valueOf(currentPath));
             int size = fis.available();
             byte[] b = new byte[size];
             fis.read(b);
@@ -179,7 +184,9 @@ public class LeftPanel extends JComponent implements ActionListener {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 fis.close();
             } catch (IOException e) {
@@ -280,8 +287,33 @@ public class LeftPanel extends JComponent implements ActionListener {
     }
 
     public void saveInvoices(){
-        String file = "InvoiceHeader.csv";
-        Path path = Paths.get("src/com/company/data/",file);
+        /*String file = "InvoiceHeader.csv";
+        Path path = Paths.get("src/com/company/data/",file);*/
+        FileOutputStream fos = null;
+        try {
+            byte[] b = Main.convertModelsToBytes(invoiceData);
+
+            fos = new FileOutputStream(String.valueOf(currentPath));
+
+            fos.write(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Couldn't save ");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Couldn't save ");
+        }finally {
+            try {
+                fos.close();
+                System.out.println("Saved Successfully");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    public void saveInvoices(String path){
+
         FileOutputStream fos = null;
         try {
             byte[] b = Main.convertModelsToBytes(invoiceData);
@@ -305,7 +337,6 @@ public class LeftPanel extends JComponent implements ActionListener {
         }
 
     }
-
     void triggerMouseListener(){
         selectedIndex = invoiceTable.getSelectedRow() < 0 ? 0 : invoiceTable.getSelectedRow() ;
 

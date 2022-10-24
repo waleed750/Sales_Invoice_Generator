@@ -1,17 +1,7 @@
 package com.company;
 
-import com.company.model.InvoiceModel;
 import com.company.ui.MainFrame;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
@@ -32,7 +22,7 @@ public class Main {
         fmain = new MainFrame();
         fmain.setVisible(true);
     }
-    public static void relanch(){
+    public static void reLanch(){
         fmain.setVisible(false);
         fmain.dispose();
         fmain = new MainFrame();
@@ -41,7 +31,7 @@ public class Main {
     public static  void saveInvoices(){
         fmain.leftPanel.saveInvoices();
         fmain.rightPanel.saveInvoices();
-        relanch();
+        reLanch();
     }
 
 }

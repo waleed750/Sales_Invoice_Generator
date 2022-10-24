@@ -3,16 +3,14 @@ package com.company.ui.rightPanel;
 import com.company.Main;
 import com.company.data.CompnentNames;
 import com.company.exceptions.DateFormatException;
+import com.company.exceptions.WrongFileFormatException;
 import com.company.model.InvoiceItemModel;
 import com.company.model.InvoiceModel;
 import com.company.ui.MainFrame;
-import com.company.ui.leftPanel.LeftPanel;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -52,10 +50,12 @@ public class RightPanel extends JComponent implements ActionListener {
     List<InvoiceItemModel> currentInvoiceItems ;
     public  static int selectedIndex = -1 ;
 
-    String[] cols2 = {"No." , "Item Name" , "Item Price" , "Count" , "Item Total"};
-    public RightPanel(){
-        //Right Panel Starts -------------------------
+    public  static String currentPath = "";
 
+    String[] cols2 = {"No." , "Item Name" , "Item Price" , "Count" , "Item Total"};
+    public RightPanel(String path){
+        //Right Panel Starts -------------------------
+        currentPath = path;
         getInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
         getCurrentInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
         JPanel panel = new JPanel();
@@ -185,12 +185,15 @@ public class RightPanel extends JComponent implements ActionListener {
     }
     public  void getInvoiceItems(InvoiceModel model){
 
-            String file = "InvoiceLine.csv";
-            Path path = Paths.get("src/com/company/data/",file);
+            /*String file = "InvoiceLine.csv";
+            Path path = Paths.get("src/com/company/data/",file);*/
             FileInputStream fis = null;
             List<Integer> totals = new ArrayList<>();
             try {
-                fis = new FileInputStream(String.valueOf(path));
+                if(!currentPath.split("\\.")[1].equals("csv")){
+                    throw new WrongFileFormatException();
+                }
+                fis = new FileInputStream(String.valueOf(currentPath));
                 int size = fis.available();
                 byte[] b = new byte[size];
                 fis.read(b);
@@ -202,7 +205,7 @@ public class RightPanel extends JComponent implements ActionListener {
                     //Split the row in columns
 
                     var tempLine = line.split(",");
-                    System.out.println(tempLine[2]);
+                    /*System.out.println(tempLine[2]);*/
 
                     int id = Integer.parseInt(tempLine[0].replaceAll("\\s+",""));
                     var temp = new InvoiceItemModel(
@@ -221,10 +224,15 @@ public class RightPanel extends JComponent implements ActionListener {
 
             } catch(FileNotFoundException e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+
             } catch (IOException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+                JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+
+            }catch (WrongFileFormatException e){
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             } finally {
                 try {
                     fis.close();
@@ -236,11 +244,12 @@ public class RightPanel extends JComponent implements ActionListener {
 
     public  void getCurrentInvoiceItems(InvoiceModel model){
         currentInvoiceItems= new ArrayList<>();
-        invnumber = 0 ;
+        invnumber = model.No;
+       /* invnumber = 0 ;*/
         for (InvoiceItemModel invoiceItem : invoiceItems) {
             if(model.No == invoiceItem.No){
                 currentInvoiceItems.add(invoiceItem);
-                invnumber++;
+                /*invnumber++;*/
             }
         }
 
@@ -249,7 +258,7 @@ public class RightPanel extends JComponent implements ActionListener {
         customerNameField.setText(model.customer);
         invoiceDateField.setText(model.date);
 
-        System.out.println("Number of invoices "+ invnumber);
+       /* System.out.println("Number of invoices "+ invnumber);*/
                 /*if(invoiceItemTable!= null)
                     invoiceItemTable.setModel(twoDime(invoiceItems));*/
 
@@ -299,13 +308,13 @@ public class RightPanel extends JComponent implements ActionListener {
 
     public void saveInvoices(){
 
-        String file = "InvoiceLine.csv";
-        Path path = Paths.get("src/com/company/data/",file);
+        /*String file = "InvoiceLine.csv";
+        Path path = Paths.get("src/com/company/data/",file);*/
         FileOutputStream fos = null;
         try {
             byte[] b = Main.convertModelsToBytes(invoiceItems);
 
-            fos = new FileOutputStream(String.valueOf(path));
+            fos = new FileOutputStream(String.valueOf(currentPath));
 
             fos.write(b);
         } catch (FileNotFoundException e) {
@@ -324,7 +333,32 @@ public class RightPanel extends JComponent implements ActionListener {
         }
     }
 
+    public void saveInvoices(String path){
 
+        /*String file = "InvoiceLine.csv";
+        Path path = Paths.get("src/com/company/data/",file);*/
+        FileOutputStream fos = null;
+        try {
+            byte[] b = Main.convertModelsToBytes(invoiceItems);
+
+            fos = new FileOutputStream(String.valueOf(path));
+
+            fos.write(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null , e.toString(),"Warning",JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null , e.toString(),"Warning",JOptionPane.ERROR_MESSAGE);
+            System.out.println("Couldn't save Item");
+        }finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     void updateTable(int row){
 
 
@@ -372,12 +406,12 @@ public class RightPanel extends JComponent implements ActionListener {
                     Main.saveInvoices();
                     System.out.println("Save triggered");
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }finally {
                     break;
                 }
             case "Cancel":
-                Main.relanch();
+                Main.reLanch();
                 System.out.println("cancel triggered");
                 break;
         }
@@ -404,11 +438,10 @@ public class RightPanel extends JComponent implements ActionListener {
         JOptionPane.showMessageDialog(null , "Row Deleted");
     }
     void validateFormat()throws  Exception{
-        if(invoiceDateField.getText().matches("^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}")){
-
-        }else{
+        if(!invoiceDateField.getText().matches("^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}")){
             invoiceDateField.requestFocus();
             throw new DateFormatException();
         }
     }
+
 }
