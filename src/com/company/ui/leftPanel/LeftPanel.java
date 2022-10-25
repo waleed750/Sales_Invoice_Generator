@@ -38,6 +38,7 @@ public class LeftPanel extends JComponent {
         currentPath = path ;
         this.rightPanel = rightPanel;
         //Methods on Initiating
+        if(!currentPath.equals(""))
         getInvoiceData();
 
         //Panel mouse listener
@@ -54,10 +55,20 @@ public class LeftPanel extends JComponent {
 
         //Get data to table
 
+        if(invoiceData != null)
         rightPanel.getCurrentInvoiceItems(invoiceData.get(0));
 
 
         //Table Listeners
+        if(invoiceTable == null){
+            TableModel tb = new DefaultTableModel(null,cols){
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return  false;
+                }
+            };
+            invoiceTable = new JTable(tb);
+        }
         invoiceTable.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

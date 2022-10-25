@@ -25,10 +25,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
 
 
-    private  static String leftCurrentPath = Paths.get("src/com/company/data/","InvoiceHeader.csv").toString() ;
-    private static String rightCurrentPath = Paths.get("src/com/company/data/","InvoiceLine.csv").toString();
+  /*  private  static String leftCurrentPath = Paths.get("src/com/company/data/","InvoiceHeader.csv").toString() ;
+    private static String rightCurrentPath = Paths.get("src/com/company/data/","InvoiceLine.csv").toString();*/
 
-
+      private  static String leftCurrentPath = "" ;
+        private static String rightCurrentPath = "";
    private JMenuBar menuBar;
    private JMenu fileMenu;
    private JMenuItem loadMenuItem;
@@ -122,7 +123,7 @@ public class MainFrame extends JFrame implements ActionListener {
             newleftPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(leftCurrentPath);
+                fis = new FileInputStream(newleftPath);
                 int size = fis.available();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -142,11 +143,12 @@ public class MainFrame extends JFrame implements ActionListener {
         fi = new FileNameExtensionFilter("ExcelFiles",
                 ".csv");
         fc.addChoosableFileFilter(fi);
+        fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
             newrightPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(leftCurrentPath);
+                fis = new FileInputStream(newrightPath);
                 int size = fis.available();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
