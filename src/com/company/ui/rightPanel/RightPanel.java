@@ -57,8 +57,10 @@ public class RightPanel extends JComponent  {
     public RightPanel(String path){
         //Right Panel Starts -------------------------
         currentPath = path;
-        getInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
-        getCurrentInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
+        if(!currentPath.equals("")){
+            getInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
+            getCurrentInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
+        }
         JPanel panel = new JPanel();
         Border blackline = BorderFactory.createTitledBorder("Invoice Items" );
 
@@ -103,6 +105,7 @@ public class RightPanel extends JComponent  {
             }
         });
 
+        if(invoiceDateField!=null)
         invoiceDateField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -123,7 +126,43 @@ public class RightPanel extends JComponent  {
 
         panel1.setLayout(new BoxLayout(panel1 , BoxLayout.X_AXIS));
 
+        if(invoiceItemTable ==null)
+        {
+            TableModel df = new DefaultTableModel(null, cols2){
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    if(column == 0 || column == 4)
+                        return false;
+                    else
+                        return true;
+                }
+            };
+            invoiceItemTable = new JTable(df);
+        }
+        invoiceItemTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
 
+                    int row = invoiceItemTable.getSelectedRow();
+                    //To stop editing in cell
+                    if(invoiceItemTable.isEditing()){
+                        invoiceItemTable.getCellEditor().stopCellEditing();
+                    }
+
+                    updateTable(row );
+                }
+            }
+        });
+        invoiceItemTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectedIndex = invoiceItemTable.getSelectedRow() < 0 ? 0 : invoiceItemTable.getSelectedRow();
+
+
+                MainFrame.lselectedIndex = selectedIndex;
+            }
+        });
 
         panel1.add(invoiceDate);
         panel1.add(invoiceDateField);
@@ -285,6 +324,7 @@ public class RightPanel extends JComponent  {
 
     }
     String [][] twoDime(List<InvoiceItemModel> rows){
+
         String [][] temp = new String[rows.size()][5];
         for (int i = 0; i < rows.size(); i++) {
             temp[i][0] = rows.get(i).No + "";
