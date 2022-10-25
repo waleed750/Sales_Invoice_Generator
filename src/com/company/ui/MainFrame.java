@@ -111,12 +111,15 @@ public class MainFrame extends JFrame implements ActionListener {
 
     void loadFile (){
 
+        String newleftPath = "";
+        String newrightPath = "";
+
         JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter fi = new FileNameExtensionFilter("ExcelFiles",
                 ".csv");
         fc.addChoosableFileFilter(fi);
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
-            leftCurrentPath = new String(fc.getSelectedFile().getPath());
+            newleftPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(leftCurrentPath);
@@ -132,13 +135,15 @@ public class MainFrame extends JFrame implements ActionListener {
                     e.printStackTrace();
                 }
             }
+        }else{
+            return;
         }
         fc = new JFileChooser();
         fi = new FileNameExtensionFilter("ExcelFiles",
                 ".csv");
         fc.addChoosableFileFilter(fi);
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
-            rightCurrentPath = new String(fc.getSelectedFile().getPath());
+            newrightPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(leftCurrentPath);
@@ -154,7 +159,11 @@ public class MainFrame extends JFrame implements ActionListener {
                     e.printStackTrace();
                 }
             }
+        }else{
+            return;
         }
+        leftCurrentPath = newleftPath;
+        rightCurrentPath = newrightPath;
     }
 
     void saveFile(){
