@@ -1,5 +1,6 @@
 package com.company.ui.rightPanel;
 
+import com.company.EventListener;
 import com.company.Main;
 import com.company.data.CompnentNames;
 import com.company.exceptions.DateFormatException;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class RightPanel extends JComponent implements ActionListener {
+public class RightPanel extends JComponent  {
 
 
     int invnumber = 0;
@@ -112,6 +113,7 @@ public class RightPanel extends JComponent implements ActionListener {
             public void focusLost(FocusEvent e) {
                 try {
                     validateFormat();
+                    Main.fmain.leftPanel.updateRow(customerNameField.getText() , invoiceDateField.getText());
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Warning", JOptionPane.WARNING_MESSAGE);
                 }
@@ -145,9 +147,10 @@ public class RightPanel extends JComponent implements ActionListener {
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        saveButton.addActionListener(this);
+        EventListener el = new EventListener();
+        saveButton.addActionListener(el);
         saveButton.setActionCommand(CompnentNames.SaveBtn);
-        cancelButton.addActionListener(this);
+        cancelButton.addActionListener(el);
         cancelButton.setActionCommand(CompnentNames.CancelBtn);
 
         bottomPanel.add(saveButton);
@@ -264,7 +267,15 @@ public class RightPanel extends JComponent implements ActionListener {
 
         if(invoiceItemTable != null){
             /* RemoveAll();*/
-            TableModel df = new DefaultTableModel(twoDime(currentInvoiceItems), cols2);
+            TableModel df = new DefaultTableModel(twoDime(currentInvoiceItems), cols2){
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                 if(column == 0 || column == 4)
+                    return false;
+                 else
+                     return true;
+                }
+            };
             invoiceItemTable.setModel(df);
         }
         if(invoiceItemTable == null){
@@ -397,25 +408,7 @@ public class RightPanel extends JComponent implements ActionListener {
         }*/
 
     }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
-            case "Save" :
-                try {
-                    validateFormat();
-                    Main.saveInvoices();
-                    System.out.println("Save triggered");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }finally {
-                    break;
-                }
-            case "Cancel":
-                Main.reLanch();
-                System.out.println("cancel triggered");
-                break;
-        }
-    }
+
     public void deleteInvoice(InvoiceModel model){
 
         if(currentInvoiceItems.size() > 0 )
@@ -437,7 +430,7 @@ public class RightPanel extends JComponent implements ActionListener {
 
         JOptionPane.showMessageDialog(null , "Row Deleted");
     }
-    void validateFormat()throws  Exception{
+    public void validateFormat()throws  Exception{
         if(!invoiceDateField.getText().matches("^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}")){
             invoiceDateField.requestFocus();
             throw new DateFormatException();

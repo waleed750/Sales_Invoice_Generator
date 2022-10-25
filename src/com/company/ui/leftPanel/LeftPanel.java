@@ -1,6 +1,7 @@
 package com.company.ui.leftPanel;
 
 
+import com.company.EventListener;
 import com.company.Main;
 import com.company.data.CompnentNames;
 import com.company.exceptions.WrongFileFormatException;
@@ -20,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeftPanel extends JComponent implements ActionListener {
+public class LeftPanel extends JComponent {
 
     private JTable invoiceTable ;
     private String [] cols = {"No." , "Date" , "Customer" , "Total" };
@@ -89,16 +90,16 @@ public class LeftPanel extends JComponent implements ActionListener {
         panel.setBorder(blackline);
 
 
-
+        EventListener el = new EventListener();
 
         CreateNewInvoice = new JButton(CompnentNames.CreateNewInvoice);
         CreateNewInvoice.setActionCommand(CompnentNames.CreateNewInvoice);
-        CreateNewInvoice.addActionListener(this);
+        CreateNewInvoice.addActionListener(el);
 
 
         DeleteInvoice = new JButton(CompnentNames.DeleteInvoice);
         DeleteInvoice.setActionCommand(CompnentNames.DeleteInvoice);
-        DeleteInvoice.addActionListener(this);
+        DeleteInvoice.addActionListener(el);
 
 
 
@@ -118,21 +119,9 @@ public class LeftPanel extends JComponent implements ActionListener {
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
-            case "Create New Invoice" :
-                addNewInvoice();
-                JOptionPane.showMessageDialog(null , "new ");
-                break;
-            case "Delete Invoice":
-                deleteInvoice();
-                break;
 
-        }
-    }
 
-    private void addNewInvoice() {
+    public void addNewInvoice() {
         if(selectedIndex < 0 ){
 
             DefaultTableModel m = (DefaultTableModel)invoiceTable.getModel();
@@ -261,7 +250,7 @@ public class LeftPanel extends JComponent implements ActionListener {
 
     }
 
-    void deleteInvoice(){
+    public void deleteInvoice(){
         int row = invoiceTable.getSelectedRow();
         if(row < 0 &&  RightPanel.selectedIndex < 0){
             JOptionPane.showMessageDialog(null , "No Invoice Selected");
@@ -354,6 +343,7 @@ public class LeftPanel extends JComponent implements ActionListener {
         selectedIndex = Math.max(selectedIndex, 0);
         var data = invoiceData.get(selectedIndex);
         data.customer = name;
+        System.out.println("Date "+ date);
         data.date = date;
         invoiceData.set(selectedIndex , data);
         TableModel tb = new DefaultTableModel(twoDime(invoiceData),cols){
