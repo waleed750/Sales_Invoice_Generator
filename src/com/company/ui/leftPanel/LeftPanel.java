@@ -251,28 +251,36 @@ public class LeftPanel extends JComponent {
     }
 
     public void deleteInvoice(){
-        int row = invoiceTable.getSelectedRow();
-        if(row < 0 &&  RightPanel.selectedIndex < 0){
-            JOptionPane.showMessageDialog(null , "No Invoice Selected");
-            return;
-        }else if(RightPanel.selectedIndex >= 0){
-         /*   rightPanel.*/
-        }
-        DefaultTableModel d = (DefaultTableModel)invoiceTable.getModel() ;
-        rightPanel.deleteInvoice(invoiceData.get(row));
-        d.removeRow(row);
-        invoiceData.remove(row);
+        int dialogButton = JOptionPane.YES_NO_OPTION;
 
-      /*  JOptionPane.showMessageDialog(null , "Row Deleted");*/
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you want to Delete?","Warning" ,dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+            int row = invoiceTable.getSelectedRow();
+            if(row < 0 &&  RightPanel.selectedIndex < 0){
+                JOptionPane.showMessageDialog(null , "No Invoice Selected");
+                return;
+            }else if(RightPanel.selectedIndex >= 0){
+                /*   rightPanel.*/
+            }
+            DefaultTableModel d = (DefaultTableModel)invoiceTable.getModel() ;
+            rightPanel.deleteInvoice(invoiceData.get(row));
+            d.removeRow(row);
+            invoiceData.remove(row);
+
+            /*  JOptionPane.showMessageDialog(null , "Row Deleted");*/
         /*invoiceData.forEach((value)->{
             JOptionPane.showMessageDialog(null , value.toString());
         });*/
-        if(invoiceTable.getRowCount() >= 0){
-            selectedIndex = 0 ;
-            triggerMouseListener();
+            if(invoiceTable.getRowCount() >= 0){
+                selectedIndex = 0 ;
+                triggerMouseListener();
+            }
+            else
+                selectedIndex = -1 ;
+        }else{
+            return;
         }
-        else
-            selectedIndex = -1 ;
+
     }
 
     public void saveInvoices(){
