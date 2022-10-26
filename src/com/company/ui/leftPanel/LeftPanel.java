@@ -227,7 +227,11 @@ public class LeftPanel extends JComponent {
                 //tempLine[3].replaceAll("\\s+","") => To replace all white spaces
                 var temptotal = Integer.parseInt(tempLine[2].replaceAll("\\s+","") ) * Integer.parseInt(tempLine[3].replaceAll("\\s+",""));
                 //add total to the customer total
-                invoiceData.get(Integer.parseInt(tempLine[0].replaceAll("\\s+",""))-1).total += temptotal;
+                try{
+                    invoiceData.get(Integer.parseInt(tempLine[0].replaceAll("\\s+",""))-1).total += temptotal;
+                }catch (IndexOutOfBoundsException EX ){
+                    System.out.println("Incex Out Of Bounds : "+ EX.getMessage());
+                }
 
             }
 

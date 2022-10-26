@@ -58,7 +58,8 @@ public class RightPanel extends JComponent  {
         //Right Panel Starts -------------------------
         currentPath = path;
         if(!currentPath.equals("")){
-            getInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
+            /*new InvoiceModel(1 , "sda" , "sd" , 0)*/
+            getInvoiceItems();
             getCurrentInvoiceItems(new InvoiceModel(1 , "sda" , "sd" , 0));
         }
         JPanel panel = new JPanel();
@@ -225,7 +226,7 @@ public class RightPanel extends JComponent  {
         setVisible(true);
         //Right Panel Ends ----------------------------
     }
-    public  void getInvoiceItems(InvoiceModel model){
+    public  void getInvoiceItems(){
 
             /*String file = "InvoiceLine.csv";
             Path path = Paths.get("src/com/company/data/",file);*/

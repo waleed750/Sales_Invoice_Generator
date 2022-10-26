@@ -118,7 +118,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter fi = new FileNameExtensionFilter("ExcelFiles",
                 ".csv");
-        fc.addChoosableFileFilter(fi);
+        /*fc.addChoosableFileFilter(fi);*/
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
             newleftPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
@@ -143,7 +143,7 @@ public class MainFrame extends JFrame implements ActionListener {
         fi = new FileNameExtensionFilter("ExcelFiles",
                 ".csv");
         fc.addChoosableFileFilter(fi);
-        fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        /*fc.setCurrentDirectory(new File(System.getProperty("user.dir")));*/
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
             newrightPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
