@@ -15,10 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -233,8 +230,12 @@ public class RightPanel extends JComponent  {
             FileInputStream fis = null;
             List<Integer> totals = new ArrayList<>();
             try {
-                if(!currentPath.split("\\.")[1].equals("csv")){
-                    throw new WrongFileFormatException();
+                if(!currentPath.equals("")){
+                    if(!getFileExtension(currentPath).equals("csv")){
+                        throw new WrongFileFormatException();
+                    }else{
+                        System.out.println("File Extension : "+ getFileExtension(currentPath));
+                    }
                 }
                 fis = new FileInputStream(String.valueOf(currentPath));
                 int size = fis.available();
@@ -477,5 +478,12 @@ public class RightPanel extends JComponent  {
             throw new DateFormatException();
         }
     }
+    public static String getFileExtension(String fullName) {
+
+        String fileName = new File(fullName).getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+    }
+
 
 }
