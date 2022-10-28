@@ -149,9 +149,7 @@ public class LeftPanel extends JComponent {
         Path path = Paths.get("src/com/company/data/",file);*/
         FileInputStream fis = null;
         try {
-            if(!currentPath.split("\\.")[1].equals("csv")){
-                throw new WrongFileFormatException();
-            }
+
             fis = new FileInputStream(String.valueOf(currentPath));
             int size = fis.available();
             byte[] b = new byte[size];
@@ -184,11 +182,12 @@ public class LeftPanel extends JComponent {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();
-        } finally {
+            return;
+        }  finally {
             try {
-                fis.close();
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -376,5 +375,11 @@ public class LeftPanel extends JComponent {
             }
         };
         invoiceTable = new JTable(tb);
+    }
+    public static String getFileExtension(String fullName) {
+
+        String fileName = new File(fullName).getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
     }
 }

@@ -2,6 +2,7 @@ package com.company.ui;
 
 import com.company.Main;
 import com.company.data.CompnentNames;
+import com.company.exceptions.WrongFileFormatException;
 import com.company.ui.leftPanel.LeftPanel;
 import com.company.ui.rightPanel.RightPanel;
 
@@ -14,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static com.company.ui.leftPanel.LeftPanel.getFileExtension;
 
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -101,7 +104,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     System.out.println("Current Paht : "+leftCurrentPath);
                   /*  loadFile(rightCurrentPath);*/
                     System.out.println("Current Paht : "+rightCurrentPath);
-                    Main.reLanch();
+
                     break;
                 case CompnentNames.SaveFile :
                     saveFile();
@@ -120,18 +123,32 @@ public class MainFrame extends JFrame implements ActionListener {
                 ".csv");
         /*fc.addChoosableFileFilter(fi);*/
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
+
             newleftPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
+                if(!(getFileExtension(fc.getSelectedFile().getPath()).equals("csv"))){
+                    throw new WrongFileFormatException();
+                }
+                newleftPath = new String(fc.getSelectedFile().getPath());
                 fis = new FileInputStream(newleftPath);
                 int size = fis.available();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+                return;
             } finally {
                 try {
-                    fis.close();
+                    if (fis != null) {
+                        fis.close();
+
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -145,20 +162,32 @@ public class MainFrame extends JFrame implements ActionListener {
         fc.addChoosableFileFilter(fi);
         /*fc.setCurrentDirectory(new File(System.getProperty("user.dir")));*/
         if(fc.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
-            newrightPath = new String(fc.getSelectedFile().getPath());
             FileInputStream fis = null;
             try {
+                if(!(getFileExtension(fc.getSelectedFile().getPath()).equals("csv"))){
+                    throw new WrongFileFormatException();
+                }
+                newrightPath = new String(fc.getSelectedFile().getPath());
+
                 fis = new FileInputStream(newrightPath);
                 int size = fis.available();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+                return;
             } finally {
                 try {
-                    fis.close();
+                    if (fis != null) {
+                        fis.close();
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 }
             }
         }else{
@@ -166,6 +195,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         leftCurrentPath = newleftPath;
         rightCurrentPath = newrightPath;
+        Main.reLanch();
     }
 
     void saveFile(){

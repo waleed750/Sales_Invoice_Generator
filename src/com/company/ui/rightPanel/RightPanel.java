@@ -273,13 +273,13 @@ public class RightPanel extends JComponent  {
             } catch (IOException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
-
             }catch (WrongFileFormatException e){
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null , e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             } finally {
                 try {
-                    fis.close();
+                        fis.close();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
