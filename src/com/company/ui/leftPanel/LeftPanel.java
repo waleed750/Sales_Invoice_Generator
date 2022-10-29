@@ -242,7 +242,9 @@ public class LeftPanel extends JComponent {
             e.printStackTrace();
         } finally {
             try {
-                fis.close();
+              if(fis != null){
+                  fis.close();
+              }
             } catch (IOException e) {
                 e.printStackTrace();
             }
