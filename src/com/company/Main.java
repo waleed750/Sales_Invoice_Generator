@@ -31,7 +31,6 @@ public class Main {
     public static  void saveInvoices(){
         fmain.leftPanel.saveInvoices();
         fmain.rightPanel.saveInvoices();
-        reLanch();
     }
 
 }

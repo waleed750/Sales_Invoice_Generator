@@ -18,6 +18,7 @@ public class EventListener implements ActionListener {
             case "Save" :
                 try {
                     Main.fmain.rightPanel.validateFormat();
+                    Main.fmain.rightPanel.addNewInvoiceItem();
                     Main.saveInvoices();
                     System.out.println("Save triggered");
                 } catch (Exception ex) {

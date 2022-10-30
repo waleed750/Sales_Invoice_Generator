@@ -29,7 +29,7 @@ public class LeftPanel extends JComponent {
     private JButton CreateNewInvoice ;
     private JButton DeleteInvoice ;
     private JLabel invoiceLabel;
-    private  List<InvoiceModel> invoiceData;
+    public  List<InvoiceModel> invoiceData;
 
     public static String currentPath ="";
     RightPanel rightPanel;
@@ -133,15 +133,13 @@ public class LeftPanel extends JComponent {
 
 
     public void addNewInvoice() {
-        if(selectedIndex < 0 ){
-
             DefaultTableModel m = (DefaultTableModel)invoiceTable.getModel();
             var lastNo = invoiceData.get(invoiceData.size()-1).No + 1;
             m.addRow(  new Object[]{lastNo+"", " ", " " , 0+""});
             invoiceData.add(new InvoiceModel(lastNo , "" , "" , 0));
-        }else{
+        /*}else{
             rightPanel.addNewInvoiceItem(invoiceData.get(selectedIndex));
-        }
+        }*/
     }
 
     void getInvoiceData(){

@@ -345,9 +345,15 @@ public class RightPanel extends JComponent  {
             tbmodel.removeRow(i);
         }
     }
-    public void addNewInvoiceItem(InvoiceModel model){
+    public void addNewInvoiceItem(/*InvoiceModel model*/){
         DefaultTableModel m = (DefaultTableModel)invoiceItemTable.getModel();
-
+        InvoiceModel model = new InvoiceModel();
+        for (var x :Main.fmain.leftPanel.invoiceData) {
+            if(x.No == invnumber){
+                model = x ;
+                break;
+            }
+        }
         m.addRow(  new Object[]{model.No+"", " ", ""+0 , 0+"" , ""+0});
 
         var itemModel = new InvoiceItemModel(model.No , "" , 0, 0 );
@@ -363,6 +369,7 @@ public class RightPanel extends JComponent  {
 
         /*String file = "InvoiceLine.csv";
         Path path = Paths.get("src/com/company/data/",file);*/
+
         FileOutputStream fos = null;
         try {
             byte[] b = Main.convertModelsToBytes(invoiceItems);
