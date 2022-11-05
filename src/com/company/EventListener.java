@@ -27,7 +27,8 @@ public class EventListener implements ActionListener {
                     break;
                 }
             case "Cancel":
-                Main.reLanch();
+                /*Main.reLanch();*/
+                Main.fmain.rightPanel.deleteInvoice();
                 System.out.println("cancel triggered");
                 break;
         }

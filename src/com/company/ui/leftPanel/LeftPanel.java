@@ -205,12 +205,14 @@ public class LeftPanel extends JComponent {
         return  temp;
     }
     void getTotal(){
-        String file = "InvoiceLine.csv";
+        /*String file = "InvoiceLine.csv";
         Path path = Paths.get("src/com/company/data/",file);
+        */
+
         FileInputStream fis = null;
         List<Integer> totals = new ArrayList<>();
         try {
-            fis = new FileInputStream(String.valueOf(path));
+            fis = new FileInputStream(String.valueOf(RightPanel.currentPath));
             int size = fis.available();
             byte[] b = new byte[size];
             fis.read(b);
@@ -229,7 +231,6 @@ public class LeftPanel extends JComponent {
                 }catch (IndexOutOfBoundsException EX ){
                     System.out.println("Incex Out Of Bounds : "+ EX.getMessage());
                 }
-
             }
 
         } catch(FileNotFoundException e) {
@@ -374,7 +375,10 @@ public class LeftPanel extends JComponent {
                 return  false;
             }
         };
+        saveInvoices();
         invoiceTable = new JTable(tb);
+
+
     }
     public static String getFileExtension(String fullName) {
 

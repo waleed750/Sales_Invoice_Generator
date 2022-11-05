@@ -88,6 +88,7 @@ public class RightPanel extends JComponent  {
                        JOptionPane.showMessageDialog(null,"You have to enter name more than 3 characters");
                     }else{
                         Main.fmain.leftPanel.updateRow(customerNameField.getText() , invoiceDateField.getText());
+
                     }
             }
         });
@@ -95,10 +96,12 @@ public class RightPanel extends JComponent  {
         customerNameField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 if(customerNameField.getText().length() < 3){
                     customerNameField.requestFocus();
                 }else{
                     Main.fmain.leftPanel.updateRow(customerNameField.getText() , invoiceDateField.getText());
+                    Main.reLanch();
                 }
             }
         });
@@ -149,6 +152,8 @@ public class RightPanel extends JComponent  {
                     }
 
                     updateTable(row );
+                    saveInvoices();
+                    Main.reLanch();
                 }
             }
         });
@@ -207,6 +212,7 @@ public class RightPanel extends JComponent  {
                     }
 
                     updateTable(row );
+
                 }
             }
         });
@@ -478,6 +484,42 @@ public class RightPanel extends JComponent  {
         }*/
 
         JOptionPane.showMessageDialog(null , "Row Deleted");
+    }
+
+
+    public void deleteInvoice(){
+        if(selectedIndex >= 0 ){
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+
+            int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you want to Delete?","Warning" ,dialogButton);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                int row = invoiceItemTable.getSelectedRow();
+                if(row < 0 &&  RightPanel.selectedIndex < 0){
+                    JOptionPane.showMessageDialog(null , "No Invoice Selected");
+                    return;
+                }else if(RightPanel.selectedIndex >= 0){
+                    /*   rightPanel.*/
+                }
+                DefaultTableModel d = (DefaultTableModel)invoiceItemTable.getModel() ;
+                d.removeRow(row);
+                invoiceItems.remove(row);
+
+                /*  JOptionPane.showMessageDialog(null , "Row Deleted");*/
+        /*invoiceData.forEach((value)->{
+            JOptionPane.showMessageDialog(null , value.toString());
+        });*/
+                if(invoiceItemTable.getRowCount() >= 0){
+                    selectedIndex = 0 ;
+                    /*triggerMouseListener();*/
+                }
+                else
+                    selectedIndex = -1 ;
+            }else{
+                return;
+            }
+        }
+
+
     }
     public void validateFormat()throws  Exception{
         if(!invoiceDateField.getText().matches("^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}")){
