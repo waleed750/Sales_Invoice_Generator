@@ -15,7 +15,7 @@ public class EventListener implements ActionListener {
             case "Delete Invoice":
                 Main.fmain.leftPanel.deleteInvoice();
                 break;
-            case "Save" :
+            case "Create Item" :
                 try {
                     Main.fmain.rightPanel.validateFormat();
                     Main.fmain.rightPanel.addNewInvoiceItem();
@@ -26,7 +26,7 @@ public class EventListener implements ActionListener {
                 }finally {
                     break;
                 }
-            case "Cancel":
+            case "Delete Item":
                 /*Main.reLanch();*/
                 Main.fmain.rightPanel.deleteInvoice();
                 System.out.println("cancel triggered");
